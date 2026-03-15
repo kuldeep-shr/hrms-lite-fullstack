@@ -9,6 +9,23 @@ This repository is structured for:
 - `Deployment`: Render for API, Vercel for UI
 - `Database`: PostgreSQL, including Neon or Render Postgres
 
+## Quick Deploy
+
+Deploy backend on Render:
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/kuldeep-shr/hrms-lite-fullstack)
+
+Deploy frontend on Vercel:
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fkuldeep-shr%2Fhrms-lite-fullstack&root-directory=frontend&install-command=npm%20install&build-command=npm%20run%20build&output-directory=dist&env=VITE_API_BASE_URL&envDescription=Enter%20your%20Render%20backend%20URL%20including%20%2Fapi%2Fv1.&envDefaults=%7B%22VITE_API_BASE_URL%22%3A%22https%3A%2F%2Fyour-render-service.onrender.com%2Fapi%2Fv1%22%7D)
+
+Recommended deployment order:
+
+1. Deploy the backend to Render first.
+2. Copy the Render backend URL.
+3. Deploy the frontend to Vercel and set `VITE_API_BASE_URL`.
+4. Update Render `CORS_ORIGINS` with the final Vercel domain if needed.
+
 ## Core Features
 
 - Add, list, and delete employees
@@ -260,7 +277,7 @@ http://localhost:5173
 
 ### Backend
 
-Example file: [backend/.env.example](/Users/nk/Desktop/hrms_lite/backend/.env.example)
+Example file: `backend/.env.example`
 
 ```env
 APP_NAME=HRMS Lite API
@@ -273,7 +290,7 @@ CORS_ORIGINS=["http://localhost:5173"]
 
 ### Frontend
 
-Example file: [frontend/.env.example](/Users/nk/Desktop/hrms_lite/frontend/.env.example)
+Example file: `frontend/.env.example`
 
 ```env
 VITE_API_BASE_URL=http://localhost:8000/api/v1
@@ -300,7 +317,7 @@ What it does:
 
 ### Backend on Render
 
-The backend is configured for Render using [render.yaml](/Users/nk/Desktop/hrms_lite/render.yaml).
+The backend is configured for Render using `render.yaml`.
 
 Render configuration summary:
 
@@ -332,10 +349,11 @@ https://your-render-service.onrender.com/docs
 ```
 
 Python is pinned to `3.11` using [backend/.python-version](/Users/nk/Desktop/hrms_lite/backend/.python-version).
+Python is pinned to `3.11` using `backend/.python-version`.
 
 ### Frontend on Vercel
 
-The frontend is configured for Vercel using [frontend/vercel.json](/Users/nk/Desktop/hrms_lite/frontend/vercel.json).
+The frontend is configured for Vercel using `frontend/vercel.json`.
 
 Recommended Vercel settings:
 
