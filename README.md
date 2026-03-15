@@ -36,8 +36,13 @@ Recommended deployment order:
 - Show total present days per employee
 - Display dashboard summary cards for employees, departments, present days, and absent days
 - Seed demo employees and attendance with a single script
-- Wake the backend gracefully on free Render deployments and keep it warm while a user is active
 - Deploy-ready structure for Render + Vercel
+
+## Free Keep-Alive
+
+This project includes a free cron-based keep-alive workflow at `.github/workflows/keep-render-awake.yml`.
+
+It pings the Render `/health` endpoint every 10 minutes using GitHub Actions, which helps reduce Render free-tier cold starts without requiring a paid plan.
 
 ## Tech Stack
 

@@ -94,52 +94,6 @@ select {
   color: #7f2c21;
 }
 
-.warmup-card {
-  margin-top: 24px;
-  padding: 24px;
-  border-radius: 24px;
-  background: rgba(18, 33, 47, 0.92);
-  color: #f6f2e8;
-  box-shadow: 0 24px 60px rgba(18, 33, 47, 0.18);
-}
-
-.warmup-copy {
-  margin: 0 0 16px;
-  max-width: 720px;
-  color: rgba(246, 242, 232, 0.84);
-}
-
-.warmup-status {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  padding: 14px 16px;
-  border-radius: 999px;
-  background: rgba(246, 242, 232, 0.08);
-  color: #f6f2e8;
-}
-
-.warmup-dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: #f4b262;
-}
-
-.warmup-dot.active {
-  animation: warmupPulse 1.6s ease-in-out infinite;
-}
-
-.warmup-dot.idle {
-  background: #c78d61;
-}
-
-.secondary-button.light {
-  margin-top: 16px;
-  background: rgba(246, 242, 232, 0.12);
-  color: #f6f2e8;
-}
-
 .summary-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -359,18 +313,6 @@ th {
 .status-pill.absent {
   background: rgba(194, 89, 74, 0.14);
   color: #7f2c21;
-}
-
-@keyframes warmupPulse {
-  0%,
-  100% {
-    transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(244, 178, 98, 0.2);
-  }
-  50% {
-    transform: scale(1.12);
-    box-shadow: 0 0 0 8px rgba(244, 178, 98, 0);
-  }
 }
 
 @media (max-width: 900px) {

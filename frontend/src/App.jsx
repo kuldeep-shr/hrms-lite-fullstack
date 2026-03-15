@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 
-import apiClient, { keepBackendWarm, wakeBackend } from "./api/client";
+import apiClient from "./api/client";
 import AttendanceForm from "./components/AttendanceForm";
 import AttendanceRecords from "./components/AttendanceRecords";
-import BackendWakeCard from "./components/BackendWakeCard";
 import DashboardSummary from "./components/DashboardSummary";
 import EmployeeForm from "./components/EmployeeForm";
 import EmployeeList from "./components/EmployeeList";
@@ -13,10 +12,6 @@ function App() {
   const [attendanceRecords, setAttendanceRecords] = useState([]);
   const [attendanceSummaryByEmployee, setAttendanceSummaryByEmployee] = useState({});
   const [selectedEmployeeId, setSelectedEmployeeId] = useState("");
-  const [bootstrapping, setBootstrapping] = useState(true);
-  const [warmupFailed, setWarmupFailed] = useState(false);
-  const [wakingBackend, setWakingBackend] = useState(false);
-  const [warmupMessage, setWarmupMessage] = useState("Connecting to backend...");
   const [loadingAttendance, setLoadingAttendance] = useState(false);
   const [loadingSummary, setLoadingSummary] = useState(false);
   const [submittingEmployee, setSubmittingEmployee] = useState(false);
@@ -120,60 +115,13 @@ function App() {
     }
   };
 
-  const bootstrapDashboard = async () => {
-    setBootstrapping(true);
-    setWarmupFailed(false);
-    setWakingBackend(true);
-    setWarmupMessage("Connecting to backend...");
-    setBanner({ type: "", message: "" });
-
-    const backendReady = await wakeBackend({
-      onProgress: (message) => {
-        setWarmupMessage(message);
-      },
-    });
-
-    setWakingBackend(false);
-
-    if (!backendReady) {
-      setWarmupFailed(true);
-      showBanner(
-        "error",
-        "The backend is still waking up on Render. Please wait a few seconds and try again.",
-      );
-      setWarmupMessage("We could not confirm the backend wake-up yet.");
-      setBootstrapping(false);
-      return;
-    }
-
-    setWarmupMessage("Backend is awake. Loading dashboard data...");
-    await fetchEmployees();
-    setBootstrapping(false);
-  };
-
   useEffect(() => {
-    bootstrapDashboard();
+    fetchEmployees();
   }, []);
 
   useEffect(() => {
     fetchAttendance(selectedEmployeeId);
   }, [selectedEmployeeId]);
-
-  useEffect(() => {
-    const keepWarmIfVisible = () => {
-      if (document.visibilityState === "visible") {
-        keepBackendWarm();
-      }
-    };
-
-    const intervalId = window.setInterval(keepWarmIfVisible, 9 * 60 * 1000);
-    document.addEventListener("visibilitychange", keepWarmIfVisible);
-
-    return () => {
-      window.clearInterval(intervalId);
-      document.removeEventListener("visibilitychange", keepWarmIfVisible);
-    };
-  }, []);
 
   const handleCreateEmployee = async (payload) => {
     setSubmittingEmployee(true);
@@ -261,44 +209,34 @@ function App() {
         </div>
       ) : null}
 
-      {bootstrapping || warmupFailed ? (
-        <BackendWakeCard
-          isWaking={wakingBackend}
-          message={warmupMessage}
-          onRetry={bootstrapDashboard}
+      <DashboardSummary stats={dashboardStats} isLoading={loadingSummary} />
+
+      <section className="dashboard-grid">
+        <EmployeeForm onSubmit={handleCreateEmployee} isSubmitting={submittingEmployee} />
+        <AttendanceForm
+          employees={employees}
+          selectedEmployeeId={selectedEmployeeId}
+          onSubmit={handleMarkAttendance}
+          isSubmitting={submittingAttendance}
         />
-      ) : (
-        <>
-          <DashboardSummary stats={dashboardStats} isLoading={loadingSummary} />
+      </section>
 
-          <section className="dashboard-grid">
-            <EmployeeForm onSubmit={handleCreateEmployee} isSubmitting={submittingEmployee} />
-            <AttendanceForm
-              employees={employees}
-              selectedEmployeeId={selectedEmployeeId}
-              onSubmit={handleMarkAttendance}
-              isSubmitting={submittingAttendance}
-            />
-          </section>
-
-          <section className="dashboard-grid bottom-grid">
-            <EmployeeList
-              employees={employees}
-              attendanceSummaryByEmployee={attendanceSummaryByEmployee}
-              summaryLoading={loadingSummary}
-              selectedEmployeeId={selectedEmployeeId}
-              onSelect={setSelectedEmployeeId}
-              onDelete={handleDeleteEmployee}
-              isDeleting={deletingEmployee}
-            />
-            <AttendanceRecords
-              selectedEmployeeId={selectedEmployeeId}
-              records={attendanceRecords}
-              isLoading={loadingAttendance}
-            />
-          </section>
-        </>
-      )}
+      <section className="dashboard-grid bottom-grid">
+        <EmployeeList
+          employees={employees}
+          attendanceSummaryByEmployee={attendanceSummaryByEmployee}
+          summaryLoading={loadingSummary}
+          selectedEmployeeId={selectedEmployeeId}
+          onSelect={setSelectedEmployeeId}
+          onDelete={handleDeleteEmployee}
+          isDeleting={deletingEmployee}
+        />
+        <AttendanceRecords
+          selectedEmployeeId={selectedEmployeeId}
+          records={attendanceRecords}
+          isLoading={loadingAttendance}
+        />
+      </section>
     </main>
   );
 }
