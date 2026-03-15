@@ -36,6 +36,7 @@ Recommended deployment order:
 - Show total present days per employee
 - Display dashboard summary cards for employees, departments, present days, and absent days
 - Seed demo employees and attendance with a single script
+- Wake the backend gracefully on free Render deployments and keep it warm while a user is active
 - Deploy-ready structure for Render + Vercel
 
 ## Tech Stack
